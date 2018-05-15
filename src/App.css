@@ -232,6 +232,15 @@ div.exchRateLbl {
     margin-bottom: 15px;
 }
 
+#wb {
+  background-color: white;
+}
+#custom-img-1 {
+  margin: 5%;
+  width: 90%;
+  height: 90%;
+}
+
 @media (max-width: 980px) {
 
     div.exchRateLbl {
@@ -240,12 +249,12 @@ div.exchRateLbl {
     margin-bottom: 20px;
     margin-left: 0px;
     }
-    
+
     #exchCol {
         align-content: flex-start;
         padding-left: 0px;
     }
-    
+
 }
 @media (max-width: 600px) {
   #firstJumbo {
@@ -254,7 +263,7 @@ div.exchRateLbl {
   }
   ButtonToolbar {
     width: 100%;
-     
+
   }
 
 }

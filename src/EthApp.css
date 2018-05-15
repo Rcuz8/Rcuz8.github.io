@@ -1,0 +1,55 @@
+
+body {
+  padding: 40px;
+}
+.btnX {
+	background-image: linear-gradient(to right, #5c33ff 0%, #ff80ff 100%);
+	border-radius: 40px;
+  box-sizing: border-box;
+	color: #ac00e6;
+	display: block;
+	font: 1.525rem 'Oswald', Arial, sans-serif; /*18*/
+	height: 50px;
+	letter-spacing: 1px;
+	margin: 10px auto;
+  margin-top: 50%;
+	padding: 4px;
+	position: relative;
+  text-decoration: none !important;
+	text-transform: uppercase;
+	width: 164px;
+}
+
+.btnX:hover {
+	color: #fff;
+}
+
+.btnX span {
+	align-items: center;
+	background: #e7e8e9;
+	border-radius: 40px;
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	transition: background .5s ease;
+	width: 100%;
+
+}
+
+.btnX:hover span {
+	background: transparent;
+}
+
+.centered {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+    text-align: center;
+}
+.centeredImage {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+    text-align: center;
+    height: 80%;
+}

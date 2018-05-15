@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import { Jumbotron } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import { Parallax, Background } from 'react-parallax';
 import { Col, Row, Grid, DropdownButton, MenuItem, ButtonToolbar, Well, Navbar, NavItem, NavDropdown, Nav } from 'react-bootstrap';
-import Fox from './fox.jpg';
-import Apple from './img/apple-logo.png';
-import btc from './img/btc.png';
-import bg2 from './img/bg2.jpeg';
-import ibm from './img/ibm.png';
-import amazon from './img/amazonn.png';
-import google from './img/google.png';
 import "animate.css/animate.min.css";
 import ScrollAnimation from 'react-animate-on-scroll';
 import Plot from 'react-function-plot';
@@ -21,44 +13,169 @@ import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart,
 import Typing from 'react-typing-animation';
 import TypeWriter from 'react-typewriter';
 import Moment from 'react-moment';
-var css = {
-  color: 'red',
-};
-
+import imgs from './ImgFactory.js';
+import sample from './SampleData.js';
+import Web3 from 'web3';
 var LOCALHOST_URL =  "http://127.0.0.1:8080/";
-var HEROKU_URL = 'https://git.heroku.com/gentle-crag-38927.git/';
-var COINAPI = LOCALHOST_URL + "tradeInfo";
+var HEROKU_URL = 'https://gentle-crag-38927.herokuapp.com';
+var COINAPI = HEROKU_URL + "/tradeInfo";
+var web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+// Pre-Deployed
+let pr_contract_address = '0xe8f631b0f5beb2e117bcc2ec9665ef1ff646e848';
+let pr_contract_abi =  [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getRobots",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "pizzaType",
+          "type": "uint256"
+        }
+      ],
+      "name": "addPizza",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "pizzas",
+      "outputs": [
+        {
+          "name": "_type",
+          "type": "uint8"
+        },
+        {
+          "name": "pizzaId",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getPizzas",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "robots",
+      "outputs": [
+        {
+          "name": "_type",
+          "type": "uint8"
+        },
+        {
+          "name": "robotId",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "addNumber",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "robotType",
+          "type": "uint256"
+        }
+      ],
+      "name": "addRobot",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getNumber",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    }
+  ];
+let pr_contract = new web3.eth.Contract(pr_contract_abi, pr_contract_address);
 
-var chartData = [
-  { name: 14, y: 2 },
-  { name: 15, y: 4 },
-  { name: 15, y: 6 },
-  { name: 20, y: 8 },
-  { name: 15, y: 10 },
-]
-const data = [
-      {name: 'January', 'Net Profit': 4000, 'Our Money': 1000, 'Opponent Money': 5000, 'Opponent Success': 5000},
-      {name: 'February', 'Net Profit': 8000, 'Our Money': 2000, 'Opponent Money': 4000, 'Opponent Success': 4000},
-      {name: 'March', 'Net Profit': 16000, 'Our Money': 4000, 'Opponent Money': 3000, 'Opponent Success': 3000},
-      {name: 'April', 'Net Profit': 32000, 'Our Money': 8000, 'Opponent Money': 2000, 'Opponent Success': 2000},
-      {name: 'May', 'Net Profit': 64000, 'Our Money': 16000, 'Opponent Money': 1500, 'Opponent Success': 1000},
-      {name: 'June', 'Net Profit': 128000, 'Our Money': 32000, 'Opponent Money': 1000, 'Opponent Success': 1000},
+function log(str) {
+  console.log('(Z) ' + str)
+}
 
-];
-const data01 = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-                  {name: 'Group C', value: 300}, {name: 'Group D', value: 200},
-                  {name: 'Group E', value: 278}, {name: 'Group F', value: 189}]
-const data02 = [{name: 'Group A', value: 2400}, {name: 'Group B', value: 4567},
-                  {name: 'Group C', value: 1398}, {name: 'Group D', value: 9800},
-                  {name: 'Group E', value: 3908}, {name: 'Group F', value: 4800}];
-
-                  const data03 = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-                                    {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
-                  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-                  const BLUE_COLORS = ['#004e63', '#006e8c', '#00b8e6', '#4dd7fa'];
-                  const RED_COLORS = ['#990000', '#ff1a1a', '#ff8080', '#ffe6e6'];
-                  const PINK_COLORS = ['#99004d', '#d147a3', '#ff80bf', '#ffb3e6'];
-                  const RADIAN = Math.PI / 180;
 
 class MyCustomChart extends React.Component {
   constructor(props) {
@@ -115,7 +232,7 @@ class App extends Component {
     this.updateResult = this.updateResult.bind(this);
     this.updateTradingTo = this.updateTradingTo.bind(this);
     this.updateTradingFrom = this.updateTradingFrom.bind(this);
-    this.functionFromExpression = this.functionFromExpression.bind(this);
+
   }
 
   updateResult(str) {
@@ -139,9 +256,6 @@ class App extends Component {
       });
     }
   }
-  functionFromExpression(x) {
-    return 2*x;
-  }
 
   retrieveValue() {
     console.log('App: retrieveValue executed...');
@@ -162,6 +276,7 @@ class App extends Component {
           var unformatted_data = response.data;
           var data = JSON.stringify(unformatted_data);
       //      chartData = data;
+      console.log('then (response)');
             ReactDom.render(<MyCustomChart data={unformatted_data} className='MyCustomChart'/>, document.getElementById('chahts'));
 
         })
@@ -174,34 +289,34 @@ class App extends Component {
     }
    }
 
+   componentWillMount() {
+
+       web3.eth.getAccounts((error, accounts) => {
+         if (accounts.length == 0) {
+             // there is no active accounts in MetaMask
+             log('Bag not secured, couldn\'t find metamask accounts');
+         }
+         else {
+           log('We found accounts from metamask');
+           this.setState ({
+             acc: accounts[0],
+             num: 0
+           });
+           let displayed = "ETH Address: " + accounts[0];
+           ReactDom.render(displayed, document.getElementById('ETH_ADDR'));
+       //    this.getPizzas();
+       //    this.getRobots();
+         }
+       })
+   }
+
   render() {
     return (
       <div className="App">
-        <Navbar inverse fixedTop collapseOnSelect>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a href="#home">XyesX</a>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-          <Nav>
-            <NavItem eventKey={1} href="#">
-              Home
-            </NavItem>
-            <NavItem eventKey={2} href="#">
-              About Us
-            </NavItem>
-            <NavItem pullRight>
-              Christmas is&nbsp;
-              <Moment fromNow>{ Date.parse("Dec 25, 2018")}</Moment>
-            </NavItem>
-          </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+
         <Parallax className='par'
           blur={6}
-          bgImage={Fox}
+          bgImage={imgs.fox}
           bgImageAlt="Fox"
           strength={200}
           >
@@ -225,7 +340,6 @@ class App extends Component {
               <h2 className="App-Text">The following is a <strong>Ryan Cocuzzo </strong>website.</h2>
           </ScrollAnimation>
         </Jumbotron>
-
         <ScrollAnimation animateIn="slideInRight" animateOnce={true} viewport={1} duration={1} delay={0} className="scroll">
           <Grid>
         <Row className="show-grid">
@@ -234,7 +348,7 @@ class App extends Component {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart onMouseEnter={this.onPieEnter}>
               <Pie stroke="none" fill="red"
-                data={data03}
+                data={sample.data03}
                 className='pie2'
                 innerRadius={60}
                 outerRadius={90}
@@ -242,7 +356,7 @@ class App extends Component {
                 paddingAngle={0}
               >
               	{
-                	data03.map((entry, index) => <Cell fill={PINK_COLORS[index % PINK_COLORS.length]}/>)
+                	sample.data03.map((entry, index) => <Cell fill={sample.PINK_COLORS[index % sample.PINK_COLORS.length]}/>)
                 }
               </Pie>
               <Tooltip/>
@@ -257,7 +371,7 @@ class App extends Component {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart onMouseEnter={this.onPieEnter}>
               <Pie stroke="none" fill="red"
-                data={data03}
+                data={sample.data03}
                 className='pie2'
                 innerRadius={60}
                 outerRadius={90}
@@ -265,7 +379,7 @@ class App extends Component {
                 paddingAngle={0}
               >
               	{
-                	data03.map((entry, index) => <Cell fill={BLUE_COLORS[index % BLUE_COLORS.length]}/>)
+                	sample.data03.map((entry, index) => <Cell fill={sample.BLUE_COLORS[index % sample.BLUE_COLORS.length]}/>)
                 }
               </Pie>
               <Tooltip/>
@@ -280,7 +394,7 @@ class App extends Component {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart onMouseEnter={this.onPieEnter}>
               <Pie stroke="none" fill="red"
-                data={data03}
+                data={sample.data03}
                 className='pie2'
                 innerRadius={60}
                 outerRadius={90}
@@ -288,7 +402,7 @@ class App extends Component {
                 paddingAngle={0}
               >
               	{
-                	data03.map((entry, index) => <Cell fill={RED_COLORS[index % RED_COLORS.length]}/>)
+                	sample.data03.map((entry, index) => <Cell fill={sample.RED_COLORS[index % sample.RED_COLORS.length]}/>)
                 }
               </Pie>
               <Tooltip/>
@@ -327,7 +441,7 @@ class App extends Component {
                 bsStyle={'default'}
                 title={this.state.tradingFrom}
                 key={2}
-                
+
                 id={`tradeFromDD`}
               >
                 <MenuItem eventKey="1" onClick={() => {this.updateTradingFrom('USD')}}>USD</MenuItem>
@@ -354,7 +468,7 @@ class App extends Component {
       </div>
       <Parallax className='par'
         blur={6}
-        bgImage={bg2}
+        bgImage={imgs.bg2}
         bgImageAlt="bg2"
         strength={300}
         >
@@ -370,18 +484,18 @@ class App extends Component {
         <Grid>
           <Row className="show-grid">
             <Col xs={6} md={6}>
-              <img src={google} className="constrained"></img>
+              <img src={imgs.google} className="constrained"></img>
             </Col>
             <Col xs={6} md={6}>
-              <img src={btc} className="constrained"></img>
+              <img src={imgs.btc} className="constrained"></img>
             </Col>
           </Row>
           <Row className="show-grid">
             <Col xs={6} md={6}>
-              <img src={ibm} className="constrained"></img>
+              <img src={imgs.ibm} className="constrained"></img>
             </Col>
             <Col xs={6} md={6}>
-              <img src={amazon} className="constrained"></img>
+              <img src={imgs.amazon} className="constrained"></img>
             </Col>
           </Row>
         </Grid>
@@ -418,7 +532,6 @@ class App extends Component {
         <br></br>
         <br></br>
         <h2>Data Analytics</h2>
-
         <br></br>
         <br></br>
         <br></br>
@@ -431,7 +544,7 @@ class App extends Component {
               <Col xs={12} md={6} className="isAColumn">
             <h1>Our Sales Projections</h1>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart width={600} height={300} data={data}
+              <BarChart width={600} height={300} data={sample.data}
                     margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                  <CartesianGrid/>
                  <XAxis dataKey="name"/>
@@ -449,7 +562,7 @@ class App extends Component {
             <Col xs={12} md={6} className="isAColumn">
             <h1>Our Competitors</h1>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart width={600} height={300} data={data}
+              <BarChart width={600} height={300} data={sample.data}
                     margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                  <CartesianGrid/>
                  <XAxis dataKey="name"/>
@@ -469,7 +582,7 @@ class App extends Component {
               <Col xs={12} md={6} className="isAColumn">
             <h1>Our Sales Projections</h1>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart width={600} height={300} data={data}
+              <BarChart width={600} height={300} data={sample.data}
                     margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                  <CartesianGrid/>
                  <XAxis dataKey="name"/>
@@ -487,7 +600,7 @@ class App extends Component {
             <Col xs={12} md={6} className="isAColumn">
             <h1>Our Competitors</h1>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart width={600} height={300} data={data}
+              <BarChart width={600} height={300} data={sample.data}
                     margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                  <CartesianGrid/>
                  <XAxis dataKey="name"/>
@@ -507,6 +620,54 @@ class App extends Component {
 
         <hr></hr>
 
+        <div id="wb" style={{height: 700}}>
+          <br></br>
+          <h2 style={{color: 'black'}}>Our Process</h2>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <Grid style={{height: 700}}>
+            <Col xs={12} md={6} lg={6}>
+
+
+            <Row>
+              <ScrollAnimation animateIn="bounceIn" viewport={1} duration={1} delay={0} className="scroll">
+            <ResponsiveContainer width="100%" height={400}>
+              <PieChart onMouseEnter={this.onPieEnter}>
+              <Pie stroke="none" fill="red"
+                data={sample.data03}
+                className='pie2'
+                innerRadius={60}
+                outerRadius={90}
+                fill="#8884d8"
+                paddingAngle={0}
+              >
+              	{
+                	sample.data03.map((entry, index) => <Cell fill={sample.PINK_COLORS[index % sample.PINK_COLORS.length]}/>)
+                }
+              </Pie>
+              <Tooltip/>
+            </PieChart>
+            </ResponsiveContainer>
+
+            <h1 style={{color: 'black'}}>Connectivity</h1>
+            <p style={{color: 'darkgrey'}}> Connection is fundamental in any product. In our distributed peer-to-peer systems, we place a heavy emphasis on connections by connecting our connections. We supplement this by further connecting the connections that connect the connections.</p>
+            </ScrollAnimation>
+            </Row>
+            </Col>
+            <Col xs={12} md={6} lg={6}>
+              <ScrollAnimation animateIn='fadeInUp'
+                animateOut='fadeOutDown' offset={300}>
+                <img src={imgs.blkImg} id='custom-img-1'></img>
+              </ScrollAnimation>
+            </Col>
+
+          </Grid>
+
+
+
+          </div>
 
       </div>
     );
